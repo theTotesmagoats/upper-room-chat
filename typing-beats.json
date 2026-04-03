@@ -1,0 +1,68 @@
+[
+  {
+    "afterText": "Did you feel that? The earth... it moved.",
+    "from": "Peter",
+    "side": "left",
+    "charClass": "char-peter",
+    "duration": 1250
+  },
+  {
+    "afterText": "My son. My firstborn...",
+    "from": "John",
+    "side": "left",
+    "charClass": "char-john",
+    "duration": 1500,
+    "unsent": true
+  },
+  {
+    "afterNote": "*Peter and John run to the tomb*",
+    "from": "John",
+    "side": "left",
+    "charClass": "char-john",
+    "duration": 1050
+  },
+  {
+    "afterText": "We're all here. Doors locked.",
+    "from": "Thomas",
+    "side": "right",
+    "charClass": "char-thomas",
+    "duration": 1200
+  },
+  {
+    "afterText": "Back to the upper room. All of us. Waiting for power.",
+    "from": "John",
+    "side": "left",
+    "charClass": "char-john",
+    "duration": 1300,
+    "unsent": true
+  },
+  {
+    "afterContextText": "The disciples are gathered together when suddenly... a sound like wind fills the room. Tongues of fire rest on each of them.",
+    "from": "Peter",
+    "side": "left",
+    "charClass": "char-peter",
+    "duration": 1050
+  },
+  {
+    "afterText": "They're confused! Jews from everywhere... Parthians, Medes, Elamites!",
+    "from": "Thomas",
+    "side": "right",
+    "charClass": "char-thomas",
+    "duration": 950
+  },
+  {
+    "afterText": "A cloud took Him from our sight.",
+    "from": "Joanna",
+    "side": "left",
+    "charClass": "char-joanna",
+    "duration": 1700,
+    "unsent": true
+  },
+  {
+    "afterNote": "*Peter stands to speak.*",
+    "from": "Peter",
+    "side": "left",
+    "charClass": "char-peter",
+    "duration": 1250
+  }
+]
