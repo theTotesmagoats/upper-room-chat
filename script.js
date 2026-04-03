@@ -3175,7 +3175,7 @@ function updateTimelineState(msg) {
     if (msg.day) {
         currentDayLabel = msg.day;
     }
-    if (typeof msg.time === 'number' && !Number.isNaN(msg.time)) {
+    if (typeof msg.time === 'number' && !isNaN(msg.time)) {
         currentTimeMinutes = msg.time;
     }
 }
