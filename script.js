@@ -26,6 +26,13 @@ const speedControlsContainer = document.getElementById('speed-controls');
 const scrollBtn = document.getElementById('scroll-btn');
 const newIndicator = document.getElementById('new-indicator');
 const scriptureBanner = document.getElementById('scripture-banner');
+
+// Fix: Define missing bio DOM elements
+const bioName = document.getElementById('bio-name');
+const bioRole = document.getElementById('bio-role');
+const bioSummary = document.getElementById('bio-summary');
+const bioRelation = document.getElementById('bio-relation');
+const bioWhy = document.getElementById('bio-why');
 const bioPopover = document.getElementById('bio-popover');
 
 // Initialize on load
@@ -106,19 +113,8 @@ function renderSpeedControls(speeds) {
 function showFatalErrorUI(message) {
   const errorDiv = document.createElement('div');
   errorDiv.className = 'fatal-error';
-  errorDiv.style.cssText = `
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; background: #f2f2f7; padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  `;
   
   const card = document.createElement('div');
-  card.style.cssText = `
-    max-width: 500px; width: 100%; background: white;
-    border-radius: 16px; padding: 32px; text-align: center;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  `;
-  
   card.innerHTML = `
     <h2 style="color: #d63031; font-size: 24px; margin-bottom: 16px;">Something went wrong</h2>
     <p style="color: #555; line-height: 1.5;">${message}</p>
@@ -144,7 +140,13 @@ function playNextMessage() {
   }
 
   const msg = messagesData[currentMsgIndex];
-  renderMessage(msg);
+  try {
+    renderMessage(msg);
+  } catch (err) {
+    console.error(`Error rendering message at index ${currentMsgIndex}:`, err, msg);
+    showFatalErrorUI(`Failed to render message #${currentMsgIndex + 1} (${msg.day || msg.type || 'unknown type}). Please check the data.`);
+    return;
+  }
 
   // Determine delay based on message type
   let delay = baseDelay;
@@ -171,11 +173,13 @@ function renderMessage(msg) {
     return;
   }
 
-  // Handle context blocks
-  if (msg.context) {
+  // Fix: Handle context blocks - now check for type="context" first, fall back to legacy boolean
+  if (msg.type === 'context' || (typeof msg.context === 'boolean' && msg.context)) {
     const el = document.createElement('div');
-    el.className = `context-box ${msg.context.includes('Pentecost') ? 'pentecost-box' : ''}`;
-    el.textContent = msg.content;
+    // Extract text from appropriate field
+    const contextText = msg.text || msg.content || '';
+    el.className = `context-box ${contextText.includes('Pentecost') ? 'pentecost-box' : ''}`;
+    el.textContent = contextText;
     chatDiv.appendChild(el);
     return;
   }
@@ -246,16 +250,55 @@ function renderMessage(msg) {
     chatDiv.appendChild(el);
     
     // Check for typing beats after this message
-    checkTypingBeat(msg.text, msg.from, msg.side, msg.charClass || '');
+    checkTypingBeat(msg.text, msg.from, msg.side, msg.charClass || '', msg.note);
   }
 
   scrollToBottom();
 }
 
-function checkTypingBeat(text, from, side, charClass) {
-  const beat = typingBeatsData?.find(b => 
-    (b.afterText === text && b.from === from)
-  );
+// Fix: Expand typing beat matching to support multiple trigger patterns
+function checkTypingBeat(text, from, side, charClass, note) {
+  // Try new unified format first (trigger.type, etc.)
+  let beat = typingBeatsData?.find(b => {
+    if (!b.trigger) return false;
+    
+    const { trigger } = b;
+    
+    switch (trigger.type) {
+      case 'message':
+        return trigger.text === text && trigger.from === from;
+      case 'note':
+        return note && trigger.text.includes(note);
+      case 'context':
+        // This is harder to match without context content
+        // We'll skip for now if we don't have it in the message object
+        return false;
+      default:
+        return false;
+    }
+  });
+  
+  // Fall back to legacy patterns
+  if (!beat) {
+    beat = typingBeatsData?.find(b => {
+      // afterText pattern
+      if (b.afterText && b.from === from && b.text === text) {
+        return true;
+      }
+      
+      // afterNote pattern  
+      if (b.afterNote && note && b.text === note) {
+        return true;
+      }
+      
+      // afterContextText pattern
+      if (b.afterContextText && msg?.context && b.text.includes(msg.content || '')) {
+        return true;
+      }
+      
+      return false;
+    });
+  }
   
   if (beat) {
     showTypingIndicator(beat.duration);
@@ -283,15 +326,19 @@ function showTypingIndicator(duration) {
   }, duration + 100);
 }
 
+// Fix: Define missing bio DOM elements at top, then use them properly here
 function showBio(contactName) {
   const bio = biosData?.[contactName];
   if (!bio) return;
 
+  // Use the DOM references that were defined at module level
   bioName.textContent = contactName;
   bioRole.textContent = bio.role;
   bioSummary.textContent = bio.summary;
-  bioRelation.textContent = `To Jesus: ${bio.relation}`;
-  bioWhy.textContent = `Why he is here: ${bio.why}`;
+  
+  // Fix: Don't duplicate labels already stored in bios.json
+  bioRelation.textContent = bio.relation;
+  bioWhy.textContent = bio.why;
 
   bioPopover.classList.add('visible');
 }
