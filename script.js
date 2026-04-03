@@ -28,6 +28,13 @@ const newIndicator = document.getElementById('new-indicator');
 const scriptureBanner = document.getElementById('scripture-banner');
 const bioPopover = document.getElementById('bio-popover');
 
+// DOM Elements for bio content
+const bioName = document.getElementById('bio-name');
+const bioRole = document.getElementById('bio-role');
+const bioSummary = document.getElementById('bio-summary');
+const bioRelation = document.getElementById('bio-relation');
+const bioWhy = document.getElementById('bio-why');
+
 // Initialize on load
 document.addEventListener('DOMContentLoaded', initApp);
 
@@ -95,6 +102,8 @@ function renderSpeedControls(speeds) {
       if (playbackTimer) {
         clearTimeout(playbackTimer);
         playbackTimer = null;
+      }
+      if (messagesData) {
         playNextMessage();
       }
     });
@@ -253,8 +262,11 @@ function renderMessage(msg) {
 }
 
 function checkTypingBeat(text, from, side, charClass) {
+  // Find any typing beat that matches this message
   const beat = typingBeatsData?.find(b => 
-    (b.afterText === text && b.from === from)
+    (b.afterText === text && b.from === from) ||
+    (b.afterNote && b.from === from) ||
+    (b.afterContextText && b.from === from)
   );
   
   if (beat) {
@@ -287,11 +299,11 @@ function showBio(contactName) {
   const bio = biosData?.[contactName];
   if (!bio) return;
 
-  bioName.textContent = contactName;
-  bioRole.textContent = bio.role;
-  bioSummary.textContent = bio.summary;
-  bioRelation.textContent = `To Jesus: ${bio.relation}`;
-  bioWhy.textContent = `Why he is here: ${bio.why}`;
+  if (bioName) bioName.textContent = contactName;
+  if (bioRole) bioRole.textContent = bio.role;
+  if (bioSummary) bioSummary.textContent = bio.summary;
+  if (bioRelation) bioRelation.textContent = `To Jesus: ${bio.relation}`;
+  if (bioWhy) bioWhy.textContent = `Why he is here: ${bio.why}`;
 
   bioPopover.classList.add('visible');
 }
