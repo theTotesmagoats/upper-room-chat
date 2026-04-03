@@ -1,82 +1,144 @@
 # The Upper Room Chat
 
-A narrative chat experience depicting the events from Good Friday through Pentecost, as experienced by Jesus' followers.
+A narrative chat experience depicting the Upper Room events from Good Friday through Pentecost.
 
-## Features
+## Architecture Overview
 
-- **Interactive Narrative**: Experience the biblical account of Jesus' crucifixion, resurrection, and the coming of the Holy Spirit as a dynamic chat conversation
-- **Character Bios**: Hover over character names to see detailed information about each participant
-- **Scripture Integration**: Key biblical verses appear as banners during important moments
-- **Multiple Playback Speeds**: Choose between fast (4 min), normal (10 min), or slow (20 min) playback
-- **Responsive Design**: Works beautifully on both desktop and mobile devices
-
-## Architecture
-
-This application is built with a modular structure:
+This project uses a modular JavaScript architecture with ES modules:
 
 ```
 upper-room-chat/
-├── index.html              # Main HTML shell
-├── style.css               # All styling rules
-├── script.js               # Application logic (fetches JSON data)
-├── messages.json           # Narrative content (messages, day markers, context)
-├── bios.json               # Character biographical information
-├── typing-beats.json       # Typing indicator definitions
-└── config.json             # Application configuration
+├── index.html              # Main HTML entry point
+├── style.css               # Global styles
+├── content/                # JSON data files
+│   ├── messages.json
+│   ├── bios.json
+│   ├── typing-beats.json
+│   └── config.json
+└── src/
+    ├── main.js             # App initialization and orchestration
+    ├── data/
+    │   ├── loadContent.js  # Load and cache JSON content
+    │   └── validateContent.js  # Validate message schemas
+    ├── app/
+    │   ├── initApp.js      # Application setup logic
+    │   └── state.js        # Shared application state
+    ├── playback/
+    │   ├── startPlayback.js    # Playback control
+    │   ├── playNextMessage.js  # Message advancement
+    │   └── timing.js         # Delay/timing utilities
+    ├── render/
+    │   ├── renderMessage.js      # Main message rendering dispatcher
+    │   ├── renderDay.js          # Day marker rendering
+    │   ├── renderContext.js      # Context block rendering
+    │   ├── renderNote.js         # Note rendering
+    │   ├── renderVerse.js        # Scripture verse rendering
+    │   └── renderChatMessage.js  # Chat message rendering
+    ├── ui/
+    │   ├── speedControls.js      # Playback speed controls
+    │   ├── bioPopover.js         # Character bio popovers
+    │   ├── scrollFollow.js       # Auto-scroll behavior
+    │   └── fatalError.js         # Error display UI
+    ├── effects/
+    │   ├── typingBeats.js        # Typing indicator logic
+    │   └── scriptureBanner.js    # Scripture banner display
+    └── utils/
+        ├── dom.js                # DOM utilities
+        └── escapeHtml.js         # HTML escaping for safety
 ```
 
-### Benefits of This Structure
+## Module Responsibilities
 
-- **Easy Content Updates**: Edit narrative in `messages.json` without touching code
-- **Collaborative Development**: Different team members can work on content, styling, or logic
-- **Maintainable Codebase**: Clear separation of concerns makes debugging easier
-- **Scalable Design**: Easy to add new features like dark mode or export functionality
+- **main.js** - Tiny entry point that orchestrates loading and initialization
+- **data/** - Content loading and validation only
+- **app/** - Application setup and shared state management
+- **playback/** - Message playback timing and advancement logic
+- **render/** - Pure rendering functions (turn data → DOM)
+- **ui/** - Controls, event listeners, user interaction
+- **effects/** - Special visual effects (typing beats, banners)
+- **utils/** - Helper utilities (HTML escaping, DOM helpers)
 
-## Getting Started
+## Local Development
 
-### For Users
+This project requires a local server to run properly:
 
-Simply open `index.html` in any modern web browser, or visit the deployed GitHub Pages site.
+```bash
+# Using Python's built-in HTTP server
+python3 -m http.server 4173
 
-### For Developers
+# Or using Node.js with serve
+npm install -g serve
+serve -p 4173
+```
 
-1. Clone this repository
-2. Make changes as needed:
-   - Update `messages.json` for narrative content
-   - Modify `style.css` for visual changes
-   - Edit `script.js` for functionality updates
-3. Test locally by opening `index.html`
-4. Deploy to GitHub Pages via repository settings
+Then open `http://localhost:4173` in your browser.
 
-## Configuration
+## Content Structure
 
-Edit `config.json` to customize:
+### messages.json
 
-- **Speed Settings**: Adjust playback timing and labels
-- **Scripture Display Times**: Control how long verses appear
-- **Scroll Behavior**: Fine-tune auto-scroll thresholds
+Messages use explicit types for clarity:
 
-## Deployment
+- `{ "type": "day", "text": "Day 1 – Good Friday" }`
+- `{ "type": "context", "text": "Just after noon..." }`
+- `{ "type": "message", "from": "John", "text": "...", "side": "left" }`
+- `{ "type": "note", "text": "*Friday — later*" }`
+- `{ "type": "verse", "verseText": "...", "citation": "..." }`
 
-This application is designed for easy deployment on GitHub Pages:
+### bios.json
 
-1. Push all files to your repository
-2. Go to Settings → Pages
-3. Select "main" branch as source
-4. Click Save
+Character bios with role, summary, relation, and why:
 
-Your site will be live at `https://yourusername.github.io/upper-room-chat/`
+```json
+{
+  "Peter": {
+    "role": "Simon Peter — fisherman, disciple, and Pentecost preacher",
+    "summary": "One of the Twelve...",
+    "relation": "To Jesus: close disciple...",
+    "why": "Why he is here: Peter stands near..."
+  }
+}
+```
 
-## Future Enhancements
+### typing-beats.json
 
-Potential improvements:
-- Dark mode toggle
-- Font size controls
-- Export narrative as PDF
-- Skip to specific days/sections
-- Audio narration integration
-- Multi-language support
+Typing beats use a unified trigger format:
+
+```json
+[
+  {
+    "trigger": {
+      "type": "message",
+      "from": "Peter",
+      "text": "..."
+    },
+    "duration": 1250,
+    "unsent": false
+  }
+]
+```
+
+## Validation
+
+The app validates all content before playback:
+
+- Required fields per message type
+- Unknown types detection
+- Bios structure validation
+- Typing beats format checking
+
+Validation errors show specific messages indicating the problematic index/type.
+
+## Future Development
+
+To add new features:
+
+1. Create modules following the responsibility rules above
+2. Add new message types to content/messages.json schema
+3. Implement render functions in src/render/
+4. Update typing beat matching if needed
+5. Test with sample data first
 
 ## License
 
-This project is open source and available for personal and ministry use.
+MIT

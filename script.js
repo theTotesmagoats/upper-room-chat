@@ -26,6 +26,13 @@ const speedControlsContainer = document.getElementById('speed-controls');
 const scrollBtn = document.getElementById('scroll-btn');
 const newIndicator = document.getElementById('new-indicator');
 const scriptureBanner = document.getElementById('scripture-banner');
+
+// Define bio DOM elements
+const bioName = document.getElementById('bio-name');
+const bioRole = document.getElementById('bio-role');
+const bioSummary = document.getElementById('bio-summary');
+const bioRelation = document.getElementById('bio-relation');
+const bioWhy = document.getElementById('bio-why');
 const bioPopover = document.getElementById('bio-popover');
 
 // Initialize on load
@@ -106,19 +113,8 @@ function renderSpeedControls(speeds) {
 function showFatalErrorUI(message) {
   const errorDiv = document.createElement('div');
   errorDiv.className = 'fatal-error';
-  errorDiv.style.cssText = `
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; background: #f2f2f7; padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  `;
   
   const card = document.createElement('div');
-  card.style.cssText = `
-    max-width: 500px; width: 100%; background: white;
-    border-radius: 16px; padding: 32px; text-align: center;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  `;
-  
   card.innerHTML = `
     <h2 style="color: #d63031; font-size: 24px; margin-bottom: 16px;">Something went wrong</h2>
     <p style="color: #555; line-height: 1.5;">${message}</p>
@@ -144,7 +140,13 @@ function playNextMessage() {
   }
 
   const msg = messagesData[currentMsgIndex];
-  renderMessage(msg);
+  try {
+    renderMessage(msg);
+  } catch (err) {
+    console.error(`Error rendering message at index ${currentMsgIndex}:`, err, msg);
+    showFatalErrorUI(`Failed to render message #${currentMsgIndex + 1} (${msg.day || msg.type || 'unknown type}). Please check the data.`);
+    return;
+  }
 
   // Determine delay based on message type
   let delay = baseDelay;
@@ -172,10 +174,12 @@ function renderMessage(msg) {
   }
 
   // Handle context blocks
-  if (msg.context) {
+  if (msg.type === 'context' || (typeof msg.context === 'boolean' && msg.context)) {
     const el = document.createElement('div');
-    el.className = `context-box ${msg.context.includes('Pentecost') ? 'pentecost-box' : ''}`;
-    el.textContent = msg.content;
+    // Extract text from appropriate field
+    const contextText = msg.text || msg.content || '';
+    el.className = `context-box ${contextText.includes('Pentecost') ? 'pentecost-box' : ''}`;
+    el.textContent = contextText;
     chatDiv.appendChild(el);
     return;
   }
@@ -205,7 +209,7 @@ function renderMessage(msg) {
     bannerEl.innerHTML = `
       <div class="scripture-banner-tag">${tagText}</div>
       <div class="scripture-banner-text">"${msg.verseText}"</div>
-      <div class="scripture-banner-citation">${msg.citation}</div>
+      <div class="script scripture-banner-citation">${msg.citation}</div>
     `;
     
     // Show banner with timing
@@ -246,18 +250,67 @@ function renderMessage(msg) {
     chatDiv.appendChild(el);
     
     // Check for typing beats after this message
-    checkTypingBeat(msg.text, msg.from, msg.side, msg.charClass || '');
+    checkTypingBeat(msg);
   }
 
   scrollToBottom();
 }
 
-function checkTypingBeat(text, from, side, charClass) {
-  const beat = typingBeatsData?.find(b => 
-    (b.afterText === text && b.from === from)
-  );
+// Pass 2: Simplified typing beat matching using unified trigger format
+function findTypingBeatForMessage(msg) {
+  if (!typingBeatsData || !msg) return null;
+
+  const type = msg.type;
   
-  if (beat) {
+  // Check for new unified format with trigger objects
+  for (const beat of typingBeatsData) {
+    if (!beat.trigger) continue;
+    
+    const { trigger } = beat;
+    
+    switch (trigger.type) {
+      case 'message':
+        if (msg.from && trigger.text === msg.text && trigger.from === msg.from) {
+          return beat;
+        }
+        break;
+      case 'note':
+        // Match notes based on exact text match
+        if (msg.note && trigger.text === msg.note) {
+          return beat;
+        }
+        break;
+      case 'context':
+        // Match context blocks - this is tricky since we don't have full context content in message objects
+        // We'll use a loose match on partial text for now
+        const contextText = msg.text || msg.content || '';
+        if (trigger.text && contextText.includes(trigger.text.substring(0, Math.min(20, trigger.text.length)))) {
+          return beat;
+        }
+        break;
+    }
+  }
+  
+  // Fall back to legacy patterns (for backwards compatibility during migration)
+  for (const beat of typingBeatsData) {
+    if (!beat.trigger && (beat.afterText || beat.afterNote || beat.afterContextText)) {
+      // Legacy pattern handling
+      if (beat.afterText && msg.text === beat.afterText && (!beat.from || msg.from === beat.from)) {
+        return beat;
+      }
+      if (beat.afterNote && msg.note === beat.afterNote) {
+        return beat;
+      }
+    }
+  }
+  
+  return null;
+}
+
+function checkTypingBeat(msg) {
+  const beat = findTypingBeatForMessage(msg);
+  
+  if (beat && !beat.unsent) {
     showTypingIndicator(beat.duration);
   }
 }
@@ -283,6 +336,7 @@ function showTypingIndicator(duration) {
   }, duration + 100);
 }
 
+// Use bio DOM elements defined at module level
 function showBio(contactName) {
   const bio = biosData?.[contactName];
   if (!bio) return;
@@ -290,8 +344,10 @@ function showBio(contactName) {
   bioName.textContent = contactName;
   bioRole.textContent = bio.role;
   bioSummary.textContent = bio.summary;
-  bioRelation.textContent = `To Jesus: ${bio.relation}`;
-  bioWhy.textContent = `Why he is here: ${bio.why}`;
+  
+  // Don't duplicate labels already stored in bios.json
+  bioRelation.textContent = bio.relation;
+  bioWhy.textContent = bio.why;
 
   bioPopover.classList.add('visible');
 }
