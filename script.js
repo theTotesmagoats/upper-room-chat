@@ -3485,4 +3485,88 @@ function getTransitionDelay(currentItem, nextItem) {
     }
 
     const jitter = 0.86 + Math.random() * 0.34;
-    delay *=... (truncated)
+    delay *= jitter;
+
+    return delay;
+}
+
+// Playback control functions
+function play() {
+    if (!messages || currentMsg >= messages.length) return;
+    
+    const item = messages[currentMsg];
+    
+    // Skip empty items
+    if (!item) {
+        advancePlayback();
+        return;
+    }
+
+    // Handle day markers
+    if (item.day) {
+        if (currentDayLabel !== item.day) {
+            currentDayLabel = item.day;
+            chat.appendChild(createDayMarker(item.day));
+        }
+        advancePlayback();
+        return;
+    }
+
+    // Handle context blocks
+    if (item.context) {
+        chat.appendChild(createContextBox(item));
+        advancePlayback();
+        return;
+    }
+
+    // Handle notes
+    if (item.note || (typeof item.time === 'number' && !isNaN(item.time))) {
+        chat.appendChild(createNote(item));
+        advancePlayback();
+        return;
+    }
+
+    // Handle typing indicators
+    if (item.type === 'typing') {
+        chat.appendChild(createTypingIndicator(item));
+        
+        const delay = getTransitionDelay(null, item);
+        setTimeout(() => {
+            nextTimer = null;
+            currentMsg++;
+            play();
+        }, item.duration || 1000);
+        return;
+    }
+
+    // Handle regular messages
+    if (item.from && item.text) {
+        chat.appendChild(createMessage(item));
+        
+        const delay = getTransitionDelay(null, item);
+        setTimeout(() => {
+            nextTimer = null;
+            currentMsg++;
+            play();
+        }, delay);
+        return;
+    }
+
+    // Fallback: advance and continue
+    advancePlayback();
+}
+
+function advancePlayback() {
+    if (!messages || currentMsg >= messages.length) return;
+    
+    const delay = getTransitionDelay(null, messages[currentMsg]);
+    setTimeout(() => {
+        nextTimer = null;
+        play();
+    }, Math.max(400, delay));
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    initApp();
+});
