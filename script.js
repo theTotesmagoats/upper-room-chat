@@ -1335,7 +1335,7 @@ const fallbackBios = {
     "role": "Salome — Galilean follower and witness at cross and tomb",
     "summary": "Named in Mark among the women who followed Jesus, watched the crucifixion from a distance, and came to the tomb with spices.",
     "relation": "To Jesus: devoted woman disciple from the wider circle that stayed near through His death and burial.",
-    "why": "Why she is here: Salome helps keep the women's witness visible in the crucifixion and resurrection scenes."
+    "why": "Why she is here: Salome helps keep the women's witness visible in the crucixion and resurrection scenes."
   },
   "Joseph of Arimathea": {
     "role": "Joseph of Arimathea — respected council member and secret disciple",
@@ -2783,7 +2783,7 @@ const fallbackBios = {
     "role": "Salome — Galilean follower and witness at cross and tomb",
     "summary": "Named in Mark among the women who followed Jesus, watched the crucifixion from a distance, and came to the tomb with spices.",
     "relation": "To Jesus: devoted woman disciple from the wider circle that stayed near through His death and burial.",
-    "why": "Why she is here: Salome helps keep the women's witness visible in the crucifixion and resurrection scenes."
+    "why": "Why she is here: Salome helps keep the women's witness visible in the crucixion and resurrection scenes."
   },
   "Joseph of Arimathea": {
     "role": "Joseph of Arimathea — respected council member and secret disciple",
