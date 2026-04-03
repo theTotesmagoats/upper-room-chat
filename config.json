@@ -1,0 +1,34 @@
+{
+  "speeds": {
+    "fast": {
+      "label": "Fast (4 min)",
+      "delay": 1800,
+      "id": 1
+    },
+    "normal": {
+      "label": "Normal (10 min)",
+      "delay": 4500,
+      "id": 2
+    },
+    "slow": {
+      "label": "Slow (20 min)",
+      "delay": 9000,
+      "id": 3
+    }
+  },
+  "defaultSpeed": "normal",
+  "participantCount": {
+    "prefix": "participants"
+  },
+  "scripture": {
+    "minWordsDisplayTime": 5200,
+    "maxWordsDisplayTime": 9200,
+    "baseDelay": 2800,
+    "wordsPerSecond": 260
+  },
+  "scroll": {
+    "thresholdPixelsFromBottom": 90,
+    "fadeTypingOutDuration": 220,
+    "typingIndicatorFadeDelay": 140
+  }
+}
