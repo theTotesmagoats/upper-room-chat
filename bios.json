@@ -1,0 +1,86 @@
+{
+  "Peter": {
+    "role": "Simon Peter — fisherman, disciple, and Pentecost preacher",
+    "summary": "One of the Twelve and part of Jesus' inner circle. Impulsive, loyal, and still carrying the wound of having denied Him.",
+    "relation": "To Jesus: close disciple, eyewitness to major moments, and often the spokesman among the apostles.",
+    "why": "Why he is here: Peter stands near the center of the denial, the empty tomb, the restoration by the sea, the Ascension, and the public witness of Pentecost."
+  },
+  "John": {
+    "role": "John son of Zebedee — beloved disciple and eyewitness",
+    "summary": "One of the Twelve and among Jesus' closest companions. He remains near the cross when many others scatter.",
+    "relation": "To Jesus: part of the inner circle; at the cross Jesus entrusts His mother Mary to John's care.",
+    "why": "Why he is here: John is a key eyewitness to the crucifixion, the empty tomb, the upper-room appearances, and the breakfast by the sea."
+  },
+  "James": {
+    "role": "James son of Zebedee — disciple and brother of John",
+    "summary": "One of the Twelve and, with Peter and John, part of Jesus' inner circle during key moments of His ministry.",
+    "relation": "To Jesus: close disciple present among the apostles named in the upper room after the Ascension.",
+    "why": "Why he is here: James helps represent the apostolic circle that moves from fear and confusion into obedience, prayer, and witness."
+  },
+  "Andrew": {
+    "role": "Andrew — disciple, brother of Peter, early follower",
+    "summary": "One of the Twelve and Simon Peter's brother. The Gospels often show him bringing people toward Jesus.",
+    "relation": "To Jesus: disciple called early in the ministry and present among the apostles in the upper room in Acts 1.",
+    "why": "Why he is here: Andrew gives voice to the apostolic group in the waiting, the Ascension, and the coming mission."
+  },
+  "Matthew": {
+    "role": "Matthew — tax collector turned disciple",
+    "summary": "One of the Twelve. Formerly a tax collector, he leaves an old life to follow Jesus.",
+    "relation": "To Jesus: apostle named among those who return to the upper room and devote themselves to prayer after the Ascension.",
+    "why": "Why he is here: Matthew helps the wider apostolic chorus in the final quarter, especially the commission, waiting, and Pentecost scenes."
+  },
+  "Thomas": {
+    "role": "Thomas — disciple remembered for doubt and confession",
+    "summary": "One of the Twelve. Honest, cautious, and unwilling to pretend certainty before he truly sees.",
+    "relation": "To Jesus: faithful disciple whose skepticism becomes one of the clearest confessions: 'My Lord and my God.'",
+    "why": "Why he is here: Thomas gives voice to fear, disbelief, and the costly move from doubt to worship."
+  },
+  "Mary (mother)": {
+    "role": "Mary, mother of Jesus",
+    "summary": "The woman who bore and raised Jesus. She carries the sorrow Simeon foresaw and remains among the believers in prayer.",
+    "relation": "To Jesus: His mother, present at the cross and later named among those gathered in prayer in Acts 1.",
+    "why": "Why she is here: this story is not only public history; it is also personal grief, waiting, and faith inside the community."
+  },
+  "Mary Magdalene": {
+    "role": "Mary Magdalene — devoted follower and resurrection witness",
+    "summary": "A faithful disciple who stays close through the darkest hours and goes to the tomb early on the first day of the week.",
+    "relation": "To Jesus: beloved follower who becomes the first recorded witness of the risen Jesus in John's Gospel.",
+    "why": "Why she is here: her testimony carries the shock of loss, the empty tomb, and the recognition of the risen Christ."
+  },
+  "Joanna": {
+    "role": "Joanna — woman disciple and witness to the empty tomb",
+    "summary": "A follower of Jesus named in Luke among the women who supported Him and later reported the empty tomb to the apostles.",
+    "relation": "To Jesus: disciple from the wider circle of women who traveled with and supported His ministry.",
+    "why": "Why she is here: Joanna helps represent the women whose witness spans burial, resurrection morning, and the prayerful waiting of Acts 1."
+  },
+  "Salome": {
+    "role": "Salome — Galilean follower and witness at cross and tomb",
+    "summary": "Named in Mark among the women who followed Jesus, watched the crucifixion from a distance, and came to the tomb with spices.",
+    "relation": "To Jesus: devoted woman disciple from the wider circle that stayed near through His death and burial.",
+    "why": "Why she is here: Salome helps keep the women's witness visible in the crucifixion and resurrection scenes."
+  },
+  "Joseph of Arimathea": {
+    "role": "Joseph of Arimathea — respected council member and secret disciple",
+    "summary": "A wealthy and influential man who steps forward publicly after Jesus' death to ask Pilate for the body.",
+    "relation": "To Jesus: disciple from the margins who risks reputation to honor Him when many others are hiding.",
+    "why": "Why he is here: he helps secure Jesus' burial and shows that courage sometimes appears after the crisis breaks."
+  },
+  "Nicodemus": {
+    "role": "Nicodemus — Pharisee, seeker, and quiet ally",
+    "summary": "A religious leader who once came to Jesus by night and later assists with His burial.",
+    "relation": "To Jesus: cautious but real sympathizer whose spiritual curiosity slowly becomes public loyalty.",
+    "why": "Why he is here: his presence shows that even within the religious establishment, some were drawn to Jesus and moved by His death."
+  },
+  "Cleopas": {
+    "role": "Cleopas — traveler on the road to Emmaus",
+    "summary": "A follower outside the central apostolic circle, walking home in disappointment until the risen Jesus joins the journey.",
+    "relation": "To Jesus: disciple and witness whose heart burns as Scripture is opened and Christ is recognized in the breaking of bread.",
+    "why": "Why he is here: Cleopas brings the Emmaus testimony into the room, widening the sense that resurrection is breaking in everywhere."
+  },
+  "Matthias": {
+    "role": "Matthias — chosen to take Judas's place among the Twelve",
+    "summary": "Chosen in Acts 1 from among those who had followed Jesus from the beginning and witnessed the resurrection era.",
+    "relation": "To Jesus: part of the wider company of disciples and selected to be numbered with the apostles.",
+    "why": "Why he is here: Matthias is mentioned during the waiting days because the community is already being ordered for mission before Pentecost."
+  }
+}
