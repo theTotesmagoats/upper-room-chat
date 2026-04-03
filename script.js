@@ -27,7 +27,7 @@ const scrollBtn = document.getElementById('scroll-btn');
 const newIndicator = document.getElementById('new-indicator');
 const scriptureBanner = document.getElementById('scripture-banner');
 
-// Fix: Define missing bio DOM elements
+// Define bio DOM elements
 const bioName = document.getElementById('bio-name');
 const bioRole = document.getElementById('bio-role');
 const bioSummary = document.getElementById('bio-summary');
@@ -173,7 +173,7 @@ function renderMessage(msg) {
     return;
   }
 
-  // Fix: Handle context blocks - now check for type="context" first, fall back to legacy boolean
+  // Handle context blocks
   if (msg.type === 'context' || (typeof msg.context === 'boolean' && msg.context)) {
     const el = document.createElement('div');
     // Extract text from appropriate field
@@ -209,7 +209,7 @@ function renderMessage(msg) {
     bannerEl.innerHTML = `
       <div class="scripture-banner-tag">${tagText}</div>
       <div class="scripture-banner-text">"${msg.verseText}"</div>
-      <div class="scripture-banner-citation">${msg.citation}</div>
+      <div class="script scripture-banner-citation">${msg.citation}</div>
     `;
     
     // Show banner with timing
@@ -250,57 +250,67 @@ function renderMessage(msg) {
     chatDiv.appendChild(el);
     
     // Check for typing beats after this message
-    checkTypingBeat(msg.text, msg.from, msg.side, msg.charClass || '', msg.note);
+    checkTypingBeat(msg);
   }
 
   scrollToBottom();
 }
 
-// Fix: Expand typing beat matching to support multiple trigger patterns
-function checkTypingBeat(text, from, side, charClass, note) {
-  // Try new unified format first (trigger.type, etc.)
-  let beat = typingBeatsData?.find(b => {
-    if (!b.trigger) return false;
+// Pass 2: Simplified typing beat matching using unified trigger format
+function findTypingBeatForMessage(msg) {
+  if (!typingBeatsData || !msg) return null;
+
+  const type = msg.type;
+  
+  // Check for new unified format with trigger objects
+  for (const beat of typingBeatsData) {
+    if (!beat.trigger) continue;
     
-    const { trigger } = b;
+    const { trigger } = beat;
     
     switch (trigger.type) {
       case 'message':
-        return trigger.text === text && trigger.from === from;
+        if (msg.from && trigger.text === msg.text && trigger.from === msg.from) {
+          return beat;
+        }
+        break;
       case 'note':
-        return note && trigger.text.includes(note);
+        // Match notes based on exact text match
+        if (msg.note && trigger.text === msg.note) {
+          return beat;
+        }
+        break;
       case 'context':
-        // This is harder to match without context content
-        // We'll skip for now if we don't have it in the message object
-        return false;
-      default:
-        return false;
+        // Match context blocks - this is tricky since we don't have full context content in message objects
+        // We'll use a loose match on partial text for now
+        const contextText = msg.text || msg.content || '';
+        if (trigger.text && contextText.includes(trigger.text.substring(0, Math.min(20, trigger.text.length)))) {
+          return beat;
+        }
+        break;
     }
-  });
-  
-  // Fall back to legacy patterns
-  if (!beat) {
-    beat = typingBeatsData?.find(b => {
-      // afterText pattern
-      if (b.afterText && b.from === from && b.text === text) {
-        return true;
-      }
-      
-      // afterNote pattern  
-      if (b.afterNote && note && b.text === note) {
-        return true;
-      }
-      
-      // afterContextText pattern
-      if (b.afterContextText && msg?.context && b.text.includes(msg.content || '')) {
-        return true;
-      }
-      
-      return false;
-    });
   }
   
-  if (beat) {
+  // Fall back to legacy patterns (for backwards compatibility during migration)
+  for (const beat of typingBeatsData) {
+    if (!beat.trigger && (beat.afterText || beat.afterNote || beat.afterContextText)) {
+      // Legacy pattern handling
+      if (beat.afterText && msg.text === beat.afterText && (!beat.from || msg.from === beat.from)) {
+        return beat;
+      }
+      if (beat.afterNote && msg.note === beat.afterNote) {
+        return beat;
+      }
+    }
+  }
+  
+  return null;
+}
+
+function checkTypingBeat(msg) {
+  const beat = findTypingBeatForMessage(msg);
+  
+  if (beat && !beat.unsent) {
     showTypingIndicator(beat.duration);
   }
 }
@@ -326,17 +336,16 @@ function showTypingIndicator(duration) {
   }, duration + 100);
 }
 
-// Fix: Define missing bio DOM elements at top, then use them properly here
+// Use bio DOM elements defined at module level
 function showBio(contactName) {
   const bio = biosData?.[contactName];
   if (!bio) return;
 
-  // Use the DOM references that were defined at module level
   bioName.textContent = contactName;
   bioRole.textContent = bio.role;
   bioSummary.textContent = bio.summary;
   
-  // Fix: Don't duplicate labels already stored in bios.json
+  // Don't duplicate labels already stored in bios.json
   bioRelation.textContent = bio.relation;
   bioWhy.textContent = bio.why;
 
