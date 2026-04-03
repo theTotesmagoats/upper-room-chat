@@ -1,68 +1,77 @@
 [
   {
-    "afterText": "Did you feel that? The earth... it moved.",
-    "from": "Peter",
-    "side": "left",
-    "charClass": "char-peter",
-    "duration": 1250
+    "trigger": {
+      "type": "message",
+      "from": "Peter",
+      "text": "Did you feel that? The earth... it moved."
+    },
+    "duration": 1250,
+    "unsent": false
   },
   {
-    "afterText": "My son. My firstborn...",
-    "from": "John",
-    "side": "left",
-    "charClass": "char-john",
+    "trigger": {
+      "type": "message",
+      "from": "John",
+      "text": "My son. My firstborn..."
+    },
     "duration": 1500,
     "unsent": true
   },
   {
-    "afterNote": "*Peter and John run to the tomb*",
-    "from": "John",
-    "side": "left",
-    "charClass": "char-john",
+    "trigger": {
+      "type": "note",
+      "text": "*Peter and John run to the tomb*"
+    },
     "duration": 1050
   },
   {
-    "afterText": "We're all here. Doors locked.",
-    "from": "Thomas",
-    "side": "right",
-    "charClass": "char-thomas",
-    "duration": 1200
+    "trigger": {
+      "type": "message",
+      "from": "Thomas",
+      "text": "We're all here. Doors locked."
+    },
+    "duration": 1200,
+    "unsent": false
   },
   {
-    "afterText": "Back to the upper room. All of us. Waiting for power.",
-    "from": "John",
-    "side": "left",
-    "charClass": "char-john",
+    "trigger": {
+      "type": "message",
+      "from": "John",
+      "text": "Back to the upper room. All of us. Waiting for power."
+    },
     "duration": 1300,
     "unsent": true
   },
   {
-    "afterContextText": "The disciples are gathered together when suddenly... a sound like wind fills the room. Tongues of fire rest on each of them.",
-    "from": "Peter",
-    "side": "left",
-    "charClass": "char-peter",
+    "trigger": {
+      "type": "context",
+      "text": "The disciples are gathered together when suddenly... a sound like wind fills the room. Tongues of fire rest on each of them."
+    },
     "duration": 1050
   },
   {
-    "afterText": "They're confused! Jews from everywhere... Parthians, Medes, Elamites!",
-    "from": "Thomas",
-    "side": "right",
-    "charClass": "char-thomas",
-    "duration": 950
+    "trigger": {
+      "type": "message",
+      "from": "Thomas",
+      "text": "They're confused! Jews from everywhere... Parthians, Medes, Elamites!"
+    },
+    "duration": 950,
+    "unsent": false
   },
   {
-    "afterText": "A cloud took Him from our sight.",
-    "from": "Joanna",
-    "side": "left",
-    "charClass": "char-joanna",
+    "trigger": {
+      "type": "message",
+      "from": "Joanna",
+      "text": "A cloud took Him from our sight."
+    },
     "duration": 1700,
     "unsent": true
   },
   {
-    "afterNote": "*Peter stands to speak.*",
-    "from": "Peter",
-    "side": "left",
-    "charClass": "char-peter",
+    "trigger": {
+      "type": "note",
+      "text": "*Peter stands to speak.*"
+    },
     "duration": 1250
   }
 ]
